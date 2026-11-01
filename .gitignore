@@ -1,0 +1,4 @@
+node_modules/
+.env
+.atl/
+.codegraph/
