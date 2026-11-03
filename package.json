@@ -1,24 +1,25 @@
 {
-  "name": "react-express",
-  "version": "0.0.0",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "ready": "vp check && vp run -r test && vp run -r build",
-    "dev": "vp run -r --parallel dev",
-    "prepare": "vp config"
-  },
-  "devDependencies": {
-    "vite-plus": "catalog:"
-  },
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "12.16.1",
-      "onFail": "download"
-    }
-  },
-  "engines": {
-    "node": ">=22.18.0"
-  }
+	"name": "react-express",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"ready": "vp check && vp run -r test && vp run -r build",
+		"dev": "vp run -r --parallel dev",
+		"prepare": "vp config"
+	},
+	"devDependencies": {
+		"eslint-plugin-perfectionist": "catalog:",
+		"vite-plus": "catalog:"
+	},
+	"devEngines": {
+		"packageManager": {
+			"name": "pnpm",
+			"version": "12.16.1",
+			"onFail": "download"
+		}
+	},
+	"engines": {
+		"node": ">=22.18.0"
+	}
 }
