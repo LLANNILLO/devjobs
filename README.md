@@ -12,19 +12,20 @@ vp run dev        # Start every app in parallel (web + api)
 vp run ready      # Check, test, and build the whole workspace
 ```
 
-| App                   | URL                          |
-| --------------------- | ---------------------------- |
-| Web (Vite dev server) | http://localhost:5173        |
-| API                   | http://localhost:3000/health |
+| App                   | URL                        |
+| --------------------- | -------------------------- |
+| Web (Vite dev server) | http://localhost:5173      |
+| API                   | http://localhost:1234/jobs |
 
 ## Workspace
 
-| Path             | Package | What it is                                         |
-| ---------------- | ------- | -------------------------------------------------- |
-| `apps/web`       | `web`   | React 19 SPA: the job board UI                     |
-| `apps/api`       | `api`   | Express 5 API (currently a `/health` endpoint)     |
-| `packages/utils` | `utils` | Shared TypeScript library, bundled with `vp pack`  |
-| `tooling/lint`   | —       | Shared Oxlint presets (`base`, `react`, `express`) |
+| Path                 | Package              | What it is                                                 |
+| -------------------- | -------------------- | ---------------------------------------------------------- |
+| `apps/web`           | `web`                | React 19 SPA: the job board UI                             |
+| `apps/api`           | `api`                | Express 5 API: modular monolith (hexagonal + CQRS)         |
+| `packages/contracts` | `@devjobs/contracts` | HTTP contract shared by web and api (DTOs, allowed values) |
+| `packages/utils`     | `utils`              | Shared TypeScript library, bundled with `vp pack`          |
+| `tooling/lint`       | —                    | Shared Oxlint presets (`base`, `react`, `express`)         |
 
 ### Web app structure
 
@@ -34,23 +35,58 @@ The frontend follows a feature-first (screaming) layout and the container-presen
 apps/web/src
 ├── app/                  # App shell (Header + JobsPage + Footer)
 ├── features/jobs/        # Jobs feature
-│   ├── components/       # JobsPage (container) and presentational parts
-│   ├── data/jobs.json    # Mock job listings
-│   ├── filterJobs.ts     # Pure filtering logic (+ tests)
-│   ├── filterOptions.ts  # Filter select definitions
-│   └── types.ts          # Job, JobData, JobFilters
+│   ├── JobsPage.tsx      # Container: wires search state, API and components
+│   ├── api/              # jobsApi: builds the query and calls GET /jobs
+│   ├── hooks/            # useJobsSearch (search state), useJobs (request state)
+│   ├── model/            # Job, JobFilters, filter options, page size
+│   └── components/       # Presentational parts
 └── shared/
+    ├── api/              # httpClient (`/api`, proxied to the API by Vite)
     ├── components/       # Header, Footer
+    ├── hooks/            # useDebouncedValue
     ├── icons/            # SVG icon components
-    └── pagination/       # Generic paginate() helper (+ tests)
+    └── pagination/       # Page navigation for server-side pagination (+ tests)
 ```
+
+### API structure
+
+A modular monolith: each module is split into hexagonal layers, with one folder per use case (CQRS).
+
+```text
+apps/api
+├── src/
+│   ├── main.ts           # Entry point: server and graceful shutdown
+│   ├── bootstrap.ts      # Builds the app (shared by main and the tests)
+│   ├── config/           # Environment config (the only place reading process.env)
+│   ├── shared/           # Shared kernel: errors, validation, HTTP, logging, pagination
+│   └── modules/jobs/
+│       ├── module.ts     # Composition root (manual DI)
+│       ├── domain/       # Job aggregate, allowed values, errors
+│       ├── ports/        # inbound (JobService), outbound (JobRepository)
+│       ├── app/          # commands/<useCase>, queries/<useCase>
+│       └── adapters/     # driving/http, driven/inMemory (seeded from jobs.json)
+└── test/
+    ├── integration/      # HTTP tests against the real wiring
+    └── architecture/     # Layer dependency rules
+```
+
+| Method | Path        | Description                                         |
+| ------ | ----------- | --------------------------------------------------- |
+| GET    | `/jobs`     | Search with filters and `limit`/`offset` pagination |
+| GET    | `/jobs/:id` | Get one job                                         |
+| POST   | `/jobs`     | Create a job (`201 { id }`)                         |
+| PUT    | `/jobs/:id` | Replace a job (`204`)                               |
+| PATCH  | `/jobs/:id` | Update some fields of a job (`204`)                 |
+| DELETE | `/jobs/:id` | Delete a job (`204`)                                |
+
+Errors use RFC 9457 Problem Details (`application/problem+json`).
 
 ## Features
 
-- Search by job title or company (case-insensitive).
+- Search by job title or company (case-insensitive), debounced while typing.
 - Filter by technology, location, contract type, and experience level.
 - Pagination with previous/next chevrons and numbered page links; changing a filter resets to page 1.
-- Out-of-range pages are clamped, so stale page numbers still show results.
+- Filtering and pagination run on the API; the web app keeps showing the previous results while a new page loads.
 
 ## Stack
 
