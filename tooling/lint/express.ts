@@ -51,5 +51,6 @@ export const expressLint: LintOverride = {
 
 // Only the config module may read process.env
 export const expressConfigLint: LintOverride = {
+	plugins: ['node'],
 	rules: { 'node/no-process-env': 'off' },
 };
