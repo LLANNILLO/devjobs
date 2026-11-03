@@ -1,6 +1,9 @@
-import express from "express";
+import express from 'express';
 
 const app = express();
+const PORT = 3000;
 
-app.get("/health", (_req, res) => res.json({ ok: true }));
-app.listen(3000, () => console.log("API on :3000"));
+app.get('/health', (_req, res) => res.json({ ok: true }));
+app.listen(PORT, () => {
+	console.info('API on :3000');
+});
