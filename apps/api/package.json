@@ -4,14 +4,20 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "node --watch src/index.ts",
-		"build": "vp pack src/index.ts"
+		"dev": "node --watch src/main.ts",
+		"start": "node src/main.ts",
+		"build": "vp pack src/main.ts",
+		"test": "vp test"
 	},
 	"dependencies": {
+		"@devjobs/contracts": "workspace:*",
+		"cors": "catalog:",
 		"express": "catalog:"
 	},
 	"devDependencies": {
+		"@types/cors": "catalog:",
 		"@types/express": "catalog:",
-		"@types/node": "catalog:"
+		"@types/node": "catalog:",
+		"vite-plus": "catalog:"
 	}
 }

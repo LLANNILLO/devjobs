@@ -6,8 +6,10 @@ packages:
 catalogMode: prefer
 
 catalog:
+  '@types/cors': ^2.8.19
   '@types/express': ^5.0.6
   '@types/node': ^24
+  cors: ^2.8.6
   eslint-plugin-perfectionist: ^5.13.0
   express: ^5.3.0
   typescript: ^7.0.2
