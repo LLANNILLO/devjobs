@@ -1,8 +1,8 @@
 import type { ReactNode, SubmitEvent } from 'react';
 
-import type { FilterName, JobFilters } from '../types.ts';
+import type { FilterName, JobFilters } from '../model/types.ts';
 
-import { FILTERS } from '../filterOptions.ts';
+import { FILTERS } from '../model/filterOptions.ts';
 import { FilterSelect } from './FilterSelect.tsx';
 import { SearchBar } from './SearchBar.tsx';
 

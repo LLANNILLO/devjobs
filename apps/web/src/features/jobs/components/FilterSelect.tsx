@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
-import type { FilterOption } from '../filterOptions.ts';
-import type { FilterName } from '../types.ts';
+import type { FilterOption } from '../model/filterOptions.ts';
+import type { FilterName } from '../model/types.ts';
 
 interface FilterSelectProps {
 	readonly label: string;

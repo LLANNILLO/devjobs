@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 import { useState } from 'react';
 
-import type { Job } from '../types.ts';
+import type { Job } from '../model/types.ts';
 
 interface JobCardProps {
 	readonly job: Job;

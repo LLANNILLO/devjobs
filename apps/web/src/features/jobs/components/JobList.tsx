@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import type { Job } from '../types.ts';
+import type { Job } from '../model/types.ts';
 
 import { JobCard } from './JobCard.tsx';
 

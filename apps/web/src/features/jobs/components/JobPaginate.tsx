@@ -1,24 +1,22 @@
 import type { ReactNode } from 'react';
 
+import type { PageNavigation } from '../../../shared/pagination/pageNavigation.ts';
+
 import { ChevronLeft } from '../../../shared/icons/ChevronLeft.tsx';
 import { ChevronRight } from '../../../shared/icons/ChevronRight.tsx';
 import { PageLink } from './PageLink.tsx';
 
 interface JobPaginateProps {
-	readonly activePage: number;
-	readonly nextPage: null | number;
+	readonly navigation: PageNavigation;
 	readonly onPageChange: (page: number) => void;
-	readonly prevPage: null | number;
-	readonly totalPages: number;
 }
 
 export function JobPaginate({
-	activePage,
-	nextPage,
+	navigation,
 	onPageChange,
-	prevPage,
-	totalPages,
 }: JobPaginateProps): ReactNode {
+	const { nextPage, page: activePage, prevPage, totalPages } = navigation;
+
 	// A single page needs no navigation
 	if (totalPages <= 1) {
 		return null;
