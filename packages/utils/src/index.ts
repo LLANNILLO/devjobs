@@ -1,3 +1,3 @@
-export function fn() {
-  return "Hello, Vite+!";
+export function fn(): string {
+	return 'Hello, Vite+!';
 }
