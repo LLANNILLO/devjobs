@@ -1,0 +1,10 @@
+{
+	"name": "@devjobs/contracts",
+	"version": "0.0.0",
+	"private": true,
+	"description": "HTTP contract shared by the DevJobs API and web app: DTOs and allowed values.",
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts"
+	}
+}
